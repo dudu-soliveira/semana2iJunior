@@ -8,8 +8,13 @@ export const writeCSV = async (
   const csvWriter = createCsvWriter({
     path: filePath,
     header: [
-      { id: "title", title: "TÍTULO" },
-      { id: "value", title: "VALOR" },
+      { id: "id", title: "id" },
+      { id: "nome", title: "nome" },
+      { id: "peso", title: "peso" },
+      { id: "valor", title: "valor" },
+      { id: "quantidade", title: "quantidade" },
+      { id: "tags", title: "tags" },
+      { id: "removido", title: "removido" },
     ],
   });
 
