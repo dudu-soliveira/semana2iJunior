@@ -7,6 +7,8 @@ const filePath =
   "/home/dudu-soliveira/Desktop/iJunior/semana2/model/estoque.csv";
 
 export class estoqueService {
+  constructor() {}
+
   validaData(data: Data): void {
     if (typeof data.nome !== "string") {
       throw new Error("Nome inválido.");
@@ -41,5 +43,23 @@ export class estoqueService {
     await writeCSV(filePath, dados);
   }
 
-  constructor() {}
+  async buscar(id: number) {
+    const dados = await readCSV(filePath);
+
+    if (isNaN(id) || id < 0 || id >= dados.length) {
+      throw new Error("Id inválida.");
+    }
+
+    if (dados[id].removido === true) throw new Error("Produto removido.");
+
+    return dados[id];
+  }
+
+  async remover(id: number) {
+    const dados = await readCSV(filePath);
+
+    dados[id].removido = true;
+
+    await writeCSV(filePath, dados);
+  }
 }
