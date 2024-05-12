@@ -1,4 +1,4 @@
-enum Tags {
+export enum Tags {
   TVs = "TVs",
   Informatica = "Informática",
   Smartphones = "Smartphones",
