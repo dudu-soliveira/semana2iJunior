@@ -1,6 +1,7 @@
 import {
   adicionarProduto,
-  buscarProdutoId,
+  buscarPorNome,
+  buscarPorId,
   listarProdutos,
   pesoMedioEstoque,
   pesoTotalEstoque,
@@ -9,28 +10,46 @@ import {
   removerProduto,
   valorMedioEstoque,
   valorTotalEstoque,
+  buscarPorTag,
+  buscarPorNomeETag,
 } from "./controller/controleEstoque";
 import { Tags } from "./model/enumTags";
 import { Data } from "./model/interfaceData";
 
 const prompt = require("prompt-sync")({ sigint: true });
 
-const main = async () => {
-  while (true) {
-    console.log(
-      "Para adicionar produto digite: 1" +
-        "\nPara remover produto digite: 2" +
-        "\nPara listar os produtos digite: 3" +
-        "\nPara ver valor total do estoque digite: 4" +
-        "\nPara ver peso total do estoque digite: 5" +
-        "\nPara ver média do valor dos produtos digite: 6" +
-        "\nPara ver média dos pesos dos produtos digite: 7" +
-        "\nPara ver quantidade total de itens no estoque digite: 8" +
-        "\nPara ver quantidade total de produtos no estoque digite: 9" +
-        "\nPara sair digite: 10\n"
-    );
+const separador = "--------------------------------------------";
 
-    let entrada = prompt("Digite a ação desejada: ");
+const help = () => {
+  console.log(
+    "Para adicionar produto digite: 1" +
+      "\nPara remover produto digite: 2" +
+      "\nPara listar os produtos digite: 3" +
+      "\nPara ver valor total do estoque digite: 4" +
+      "\nPara ver peso total do estoque digite: 5" +
+      "\nPara ver média do valor dos produtos digite: 6" +
+      "\nPara ver média dos pesos dos produtos digite: 7" +
+      "\nPara ver quantidade total de itens no estoque digite: 8" +
+      "\nPara ver quantidade total de produtos no estoque digite: 9" +
+      "\nPara realizar uma busca digite: 10" +
+      "\nPara sair digite: 0\n"
+  );
+};
+
+const main = async () => {
+  help();
+
+  while (true) {
+    let entrada = prompt(
+      'Digite a ação desejada ou "h" para ajuda: '
+    ).toLowerCase();
+
+    if (entrada === "h") {
+      console.log();
+      help();
+      continue;
+    }
+
     let W = parseInt(entrada, 10);
 
     console.log();
@@ -44,10 +63,8 @@ const main = async () => {
           prompt("Digite a quantidade do produto: "),
           10
         );
-        console.log(
-          "\nAs tags possíveis são: ",
-          Object.values(Tags).join("\n")
-        );
+        console.log("\nAs tags possíveis são: ");
+        console.log(Object.values(Tags).join("\n"));
 
         let tags = prompt("Digite as tags do produto separadas por vírgula: ")
           .trim()
@@ -71,7 +88,7 @@ const main = async () => {
           10
         );
 
-        let idValido = await buscarProdutoId(id);
+        let idValido = await buscarPorId(id);
 
         if (idValido) {
           let confirmacao = prompt(
@@ -80,8 +97,10 @@ const main = async () => {
 
           if (confirmacao.startsWith("s")) await removerProduto(id);
           else if (confirmacao.startsWith("n"))
-            console.log("\n\nProduto não removido.\n\n");
-          else console.log("\n\nOpção inválida.\n\n");
+            console.log(
+              `\n\n${separador} Produto não removido ${separador}\n\n`
+            );
+          else console.log(`\n\n${separador} Opção inválida ${separador}\n\n`);
         }
         break;
 
@@ -111,6 +130,39 @@ const main = async () => {
 
       case 9:
         await quantidadeTotalProdutos();
+        break;
+
+      case 10:
+        let parametroDeBusca = prompt(
+          "Digite o parâmetro de busca (Nome, Tag, Ambos): "
+        )
+          .toLowerCase()
+          .trim();
+
+        if (parametroDeBusca === "nome") {
+          let nome = prompt("Digite o nome do produto: ");
+          await buscarPorNome(nome);
+        } else if (parametroDeBusca === "tag") {
+          console.log("As tags possíveis são:");
+          console.log(Object.values(Tags).join("\n"));
+
+          let tag = prompt("Digite a tag do produto: ");
+          await buscarPorTag(tag);
+        } else if (parametroDeBusca === "ambos") {
+          console.log("As tags possíveis são:");
+          console.log(Object.values(Tags).join("\n"));
+
+          let tag = prompt("Digite a tag do produto: ");
+          let nome = prompt("Digite o nome do produto: ");
+          await buscarPorNomeETag(nome, tag);
+        } else console.log(`\n\n${separador} Opção inválida ${separador}\n\n`);
+        break;
+
+      case 0:
+        return;
+
+      default:
+        console.log(`\n${separador} Opção inválida ${separador}\n\n`);
         break;
     }
   }

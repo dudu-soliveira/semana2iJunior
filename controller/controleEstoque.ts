@@ -1,3 +1,4 @@
+import { Tags } from "../model/enumTags";
 import { Data } from "../model/interfaceData";
 import { estoqueService } from "../service/serviceEstoque";
 
@@ -20,9 +21,9 @@ export async function adicionarProduto(data: Data) {
   }
 }
 
-export async function buscarProdutoId(id: number) {
+export async function buscarPorId(id: number) {
   try {
-    const data = await new estoqueService().buscar(id);
+    const data = await new estoqueService().buscarPorId(id);
     console.table(
       [data],
       ["id", "nome", "peso", "valor", "quantidade", "tags"]
@@ -61,7 +62,7 @@ export async function listarProdutos() {
   try {
     const dados = await new estoqueService().listar();
     console.log();
-    console.table(dados);
+    console.table(dados, ["id", "nome", "peso", "valor", "quantidade", "tags"]);
     console.log();
     console.log();
   } catch (error) {
@@ -183,5 +184,83 @@ export async function quantidadeTotalProdutos() {
         `${separador}\n\n`
       );
     } else console.log(error);
+  }
+}
+
+export async function buscarPorNome(nome: string) {
+  try {
+    const dados = await new estoqueService().buscarPorNome(nome);
+
+    if (!dados.length) {
+      console.log(
+        `\n${separador} Não há produtos com o nome ${nome} no estoque ${separador}\n\n`
+      );
+      return;
+    }
+
+    console.log();
+    console.table(dados, ["id", "nome", "peso", "valor", "quantidade", "tags"]);
+    console.log();
+    console.log();
+  } catch (error) {
+    if (error instanceof Error)
+      console.log(
+        `\n\n${separador} Erro ao buscar o produto: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    else console.log(error);
+  }
+}
+
+export async function buscarPorTag(tag: Tags) {
+  try {
+    const dados = await new estoqueService().buscarPorTag(tag);
+
+    if (!dados.length) {
+      console.log(
+        `\n${separador} Não há produtos com a tag ${tag} no estoque ${separador}\n\n`
+      );
+      return;
+    }
+
+    console.log();
+    console.table(dados, ["id", "nome", "peso", "valor", "quantidade", "tags"]);
+    console.log();
+    console.log();
+  } catch (error) {
+    if (error instanceof Error)
+      console.log(
+        `\n\n${separador} Erro ao buscar o produto: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    else console.log(error);
+  }
+}
+
+export async function buscarPorNomeETag(nome: string, tag: Tags) {
+  try {
+    const dados = await new estoqueService().buscarPorNomeETag(nome, tag);
+
+    if (!dados.length) {
+      console.log(
+        `\n${separador} Não há produtos com a tag ${tag} e o nome ${nome} no estoque ${separador}\n\n`
+      );
+      return;
+    }
+
+    console.log();
+    console.table(dados, ["id", "nome", "peso", "valor", "quantidade", "tags"]);
+    console.log();
+    console.log();
+  } catch (error) {
+    if (error instanceof Error)
+      console.log(
+        `\n\n${separador} Erro ao buscar o produto: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    else console.log(error);
   }
 }

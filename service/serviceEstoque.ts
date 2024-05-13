@@ -44,7 +44,7 @@ export class estoqueService {
     await writeCSV(filePath, dados);
   }
 
-  async buscar(id: number) {
+  async buscarPorId(id: number) {
     const dados = await readCSV(filePath);
 
     if (isNaN(id) || id < 0 || id >= dados.length) {
@@ -158,5 +158,61 @@ export class estoqueService {
         return acc;
       }
     }, 0);
+  }
+
+  async buscarPorNome(nome: string) {
+    const dados = await readCSV(filePath);
+
+    return dados
+      .filter(
+        (data) =>
+          data.removido === "false" &&
+          data.nome.toLowerCase().trim().includes(nome.toLowerCase().trim())
+      )
+      .sort((a, b) => {
+        if (a.nome < b.nome) return -1;
+        if (a.nome > b.nome) return 1;
+        return 0;
+      });
+  }
+
+  async buscarPorTag(tag: Tags) {
+    if (!Object.values(Tags).includes(tag)) {
+      throw new Error("Tag inválida.");
+    }
+
+    const dados = await readCSV(filePath);
+
+    return dados
+      .filter(
+        (data) =>
+          data.removido === "false" && data.tags.split(",").includes(tag)
+      )
+      .sort((a, b) => {
+        if (a.nome < b.nome) return -1;
+        if (a.nome > b.nome) return 1;
+        return 0;
+      });
+  }
+
+  async buscarPorNomeETag(nome: string, tag: Tags) {
+    if (!Object.values(Tags).includes(tag)) {
+      throw new Error("Tag inválida.");
+    }
+
+    const dados = await readCSV(filePath);
+
+    return dados
+      .filter(
+        (data) =>
+          data.removido === "false" &&
+          data.nome.toLowerCase().trim().includes(nome.toLowerCase().trim()) &&
+          data.tags.split(",").includes(tag)
+      )
+      .sort((a, b) => {
+        if (a.nome < b.nome) return -1;
+        if (a.nome > b.nome) return 1;
+        return 0;
+      });
   }
 }
