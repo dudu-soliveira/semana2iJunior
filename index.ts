@@ -4,6 +4,8 @@ import {
   listarProdutos,
   pesoMedioEstoque,
   pesoTotalEstoque,
+  quantidadeTotalItens,
+  quantidadeTotalProdutos,
   removerProduto,
   valorMedioEstoque,
   valorTotalEstoque,
@@ -18,13 +20,14 @@ const main = async () => {
     console.log(
       "Para adicionar produto digite: 1" +
         "\nPara remover produto digite: 2" +
-        "\nPara lista os produtos digite: 3" +
+        "\nPara listar os produtos digite: 3" +
         "\nPara ver valor total do estoque digite: 4" +
         "\nPara ver peso total do estoque digite: 5" +
         "\nPara ver média do valor dos produtos digite: 6" +
         "\nPara ver média dos pesos dos produtos digite: 7" +
-        "\nPara ver quantidade total de produtos do estoque digite: 8" +
-        "\nPara sair digite: 9\n"
+        "\nPara ver quantidade total de itens no estoque digite: 8" +
+        "\nPara ver quantidade total de produtos no estoque digite: 9" +
+        "\nPara sair digite: 10\n"
     );
 
     let entrada = prompt("Digite a ação desejada: ");
@@ -100,6 +103,14 @@ const main = async () => {
 
       case 7:
         await pesoMedioEstoque();
+        break;
+
+      case 8:
+        await quantidadeTotalItens();
+        break;
+
+      case 9:
+        await quantidadeTotalProdutos();
         break;
     }
   }

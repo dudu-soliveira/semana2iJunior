@@ -150,3 +150,38 @@ export async function pesoMedioEstoque() {
     } else console.log(error);
   }
 }
+
+export async function quantidadeTotalItens() {
+  try {
+    const quantidadeTotal = await new estoqueService().quantidadeTotalItens();
+    console.log(
+      `\n${separador} Quantidade total de itens no estoque: ${quantidadeTotal} ${separador}\n\n`
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(
+        `\n\n${separador} Erro ao calcular a quantidade total de itens no estoque: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    } else console.log(error);
+  }
+}
+
+export async function quantidadeTotalProdutos() {
+  try {
+    const quantidadeTotal =
+      await new estoqueService().quantidadeTotalProdutos();
+    console.log(
+      `\n${separador} Quantidade total de produtos no estoque: ${quantidadeTotal} ${separador}\n\n`
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(
+        `\n\n${separador} Erro ao calcular a quantidade total de produtos no estoque: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    } else console.log(error);
+  }
+}

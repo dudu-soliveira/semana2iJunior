@@ -73,15 +73,13 @@ export class estoqueService {
   async valorTotalEstoque() {
     const dados = await readCSV(filePath);
 
-    const valorTotal = dados.reduce((acc, data) => {
+    return dados.reduce((acc, data) => {
       if (data.removido === "false") {
         return acc + parseFloat(data.valor) * parseInt(data.quantidade, 10);
       } else {
         return acc;
       }
     }, 0);
-
-    return valorTotal;
   }
 
   async pesoTotalEstoque() {
@@ -136,5 +134,29 @@ export class estoqueService {
     );
 
     return pesoEQuantidadeProdutos[0] / pesoEQuantidadeProdutos[1];
+  }
+
+  async quantidadeTotalItens() {
+    const dados = await readCSV(filePath);
+
+    return dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + parseInt(data.quantidade, 10);
+      } else {
+        return acc;
+      }
+    }, 0);
+  }
+
+  async quantidadeTotalProdutos() {
+    const dados = await readCSV(filePath);
+
+    return dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + 1;
+      } else {
+        return acc;
+      }
+    }, 0);
   }
 }
