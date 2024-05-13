@@ -93,3 +93,22 @@ export async function valorTotalEstoque() {
     } else console.log(error);
   }
 }
+
+export async function pesoTotalEstoque() {
+  try {
+    const pesoTotal = await new estoqueService().pesoTotalEstoque();
+    console.log(
+      `\n${separador} Peso total do estoque: ${pesoTotal
+        .toFixed(2)
+        .replace(".", ",")}kg ${separador}\n\n`
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(
+        `\n\n${separador} Erro ao calcular o peso total do estoque: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    } else console.log(error);
+  }
+}

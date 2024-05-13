@@ -83,4 +83,18 @@ export class estoqueService {
 
     return valorTotal;
   }
+
+  async pesoTotalEstoque() {
+    const dados = await readCSV(filePath);
+
+    const pesoTotal = dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + parseFloat(data.peso) * parseInt(data.quantidade, 10);
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    return pesoTotal / 1000;
+  }
 }

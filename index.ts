@@ -2,6 +2,7 @@ import {
   adicionarProduto,
   buscarProdutoId,
   listarProdutos,
+  pesoTotalEstoque,
   removerProduto,
   valorTotalEstoque,
 } from "./controller/controleEstoque";
@@ -85,6 +86,10 @@ const main = async () => {
 
       case 4:
         await valorTotalEstoque();
+        break;
+
+      case 5:
+        await pesoTotalEstoque();
         break;
     }
   }
