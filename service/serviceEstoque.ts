@@ -6,6 +6,7 @@ import { writeCSV } from "../model/writeCSV";
 const filePath =
   "/home/dudu-soliveira/Desktop/iJunior/semana2/model/estoque.csv";
 
+// Não entendi como fazer a função readCSV retornar um array de Data
 export class estoqueService {
   constructor() {}
 
@@ -50,7 +51,7 @@ export class estoqueService {
       throw new Error("Id inválida.");
     }
 
-    if (dados[id].removido === true) throw new Error("Produto removido.");
+    if (dados[id].removido === "true") throw new Error("Produto removido.");
 
     return dados[id];
   }
@@ -61,5 +62,25 @@ export class estoqueService {
     dados[id].removido = true;
 
     await writeCSV(filePath, dados);
+  }
+
+  async listar() {
+    return (await readCSV(filePath)).filter(
+      (data) => data.removido === "false"
+    );
+  }
+
+  async valorTotalEstoque() {
+    const dados = await readCSV(filePath);
+
+    const valorTotal = dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + parseFloat(data.valor) * parseInt(data.quantidade, 10);
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    return valorTotal;
   }
 }

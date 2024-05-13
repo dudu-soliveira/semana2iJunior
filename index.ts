@@ -1,7 +1,9 @@
 import {
   adicionarProduto,
   buscarProdutoId,
+  listarProdutos,
   removerProduto,
+  valorTotalEstoque,
 } from "./controller/controleEstoque";
 import { Tags } from "./model/enumTags";
 import { Data } from "./model/interfaceData";
@@ -63,17 +65,26 @@ const main = async () => {
           10
         );
 
-        await buscarProdutoId(id);
+        let idValido = await buscarProdutoId(id);
 
-        let confirmacao = prompt(
-          "Deseja realmente remover o produto acima? (s/n): "
-        ).toLowerCase();
+        if (idValido) {
+          let confirmacao = prompt(
+            "Deseja realmente remover o produto acima? (s/n): "
+          ).toLowerCase();
 
-        if (confirmacao.startsWith("s")) await removerProduto(id);
-        else if (confirmacao.startsWith("n"))
-          console.log("\n\nProduto não removido.\n\n");
-        else console.log("\n\nOpção inválida.\n\n");
+          if (confirmacao.startsWith("s")) await removerProduto(id);
+          else if (confirmacao.startsWith("n"))
+            console.log("\n\nProduto não removido.\n\n");
+          else console.log("\n\nOpção inválida.\n\n");
+        }
+        break;
 
+      case 3:
+        await listarProdutos();
+        break;
+
+      case 4:
+        await valorTotalEstoque();
         break;
     }
   }
