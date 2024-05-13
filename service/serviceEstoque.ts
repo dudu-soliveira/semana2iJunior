@@ -97,4 +97,44 @@ export class estoqueService {
 
     return pesoTotal / 1000;
   }
+
+  async valorMedioEstoque() {
+    const dados = await readCSV(filePath);
+
+    const valorEQuantidadeProdutos = dados.reduce(
+      (acc, data) => {
+        if (data.removido === "false") {
+          return [
+            acc[0] + parseFloat(data.valor) * parseInt(data.quantidade, 10),
+            acc[1] + parseInt(data.quantidade, 10),
+          ];
+        } else {
+          return acc;
+        }
+      },
+      [0, 0]
+    );
+
+    return valorEQuantidadeProdutos[0] / valorEQuantidadeProdutos[1];
+  }
+
+  async pesoMedioEstoque() {
+    const dados = await readCSV(filePath);
+
+    const pesoEQuantidadeProdutos = dados.reduce(
+      (acc, data) => {
+        if (data.removido === "false") {
+          return [
+            acc[0] + parseFloat(data.peso) * parseInt(data.quantidade, 10),
+            acc[1] + parseInt(data.quantidade, 10),
+          ];
+        } else {
+          return acc;
+        }
+      },
+      [0, 0]
+    );
+
+    return pesoEQuantidadeProdutos[0] / pesoEQuantidadeProdutos[1];
+  }
 }

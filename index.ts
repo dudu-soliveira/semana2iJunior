@@ -2,8 +2,10 @@ import {
   adicionarProduto,
   buscarProdutoId,
   listarProdutos,
+  pesoMedioEstoque,
   pesoTotalEstoque,
   removerProduto,
+  valorMedioEstoque,
   valorTotalEstoque,
 } from "./controller/controleEstoque";
 import { Tags } from "./model/enumTags";
@@ -90,6 +92,14 @@ const main = async () => {
 
       case 5:
         await pesoTotalEstoque();
+        break;
+
+      case 6:
+        await valorMedioEstoque();
+        break;
+
+      case 7:
+        await pesoMedioEstoque();
         break;
     }
   }

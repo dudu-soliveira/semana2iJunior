@@ -112,3 +112,41 @@ export async function pesoTotalEstoque() {
     } else console.log(error);
   }
 }
+
+export async function valorMedioEstoque() {
+  try {
+    const valorMedio = await new estoqueService().valorMedioEstoque();
+    console.log(
+      `\n${separador} Valor médio dos produtos no estoque: R$ ${valorMedio
+        .toFixed(2)
+        .replace(".", ",")} ${separador}\n\n`
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(
+        `\n\n${separador} Erro ao calcular o valor médio do estoque: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    } else console.log(error);
+  }
+}
+
+export async function pesoMedioEstoque() {
+  try {
+    const pesoMedio = await new estoqueService().pesoMedioEstoque();
+    console.log(
+      `\n${separador} Peso médio dos produtos no estoque: ${pesoMedio.toFixed(
+        0
+      )}g ${separador}\n\n`
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(
+        `\n\n${separador} Erro ao calcular o peso médio do estoque: `,
+        error.message,
+        `${separador}\n\n`
+      );
+    } else console.log(error);
+  }
+}
