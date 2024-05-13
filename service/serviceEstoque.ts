@@ -6,7 +6,10 @@ import { writeCSV } from "../model/writeCSV";
 const filePath =
   "/home/dudu-soliveira/Desktop/iJunior/semana2/model/estoque.csv";
 
+// Não entendi como fazer a função readCSV retornar um array de Data
 export class estoqueService {
+  constructor() {}
+
   validaData(data: Data): void {
     if (typeof data.nome !== "string") {
       throw new Error("Nome inválido.");
@@ -41,5 +44,119 @@ export class estoqueService {
     await writeCSV(filePath, dados);
   }
 
-  constructor() {}
+  async buscar(id: number) {
+    const dados = await readCSV(filePath);
+
+    if (isNaN(id) || id < 0 || id >= dados.length) {
+      throw new Error("Id inválida.");
+    }
+
+    if (dados[id].removido === "true") throw new Error("Produto removido.");
+
+    return dados[id];
+  }
+
+  async remover(id: number) {
+    const dados = await readCSV(filePath);
+
+    dados[id].removido = true;
+
+    await writeCSV(filePath, dados);
+  }
+
+  async listar() {
+    return (await readCSV(filePath)).filter(
+      (data) => data.removido === "false"
+    );
+  }
+
+  async valorTotalEstoque() {
+    const dados = await readCSV(filePath);
+
+    return dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + parseFloat(data.valor) * parseInt(data.quantidade, 10);
+      } else {
+        return acc;
+      }
+    }, 0);
+  }
+
+  async pesoTotalEstoque() {
+    const dados = await readCSV(filePath);
+
+    const pesoTotal = dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + parseFloat(data.peso) * parseInt(data.quantidade, 10);
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    return pesoTotal / 1000;
+  }
+
+  async valorMedioEstoque() {
+    const dados = await readCSV(filePath);
+
+    const valorEQuantidadeProdutos = dados.reduce(
+      (acc, data) => {
+        if (data.removido === "false") {
+          return [
+            acc[0] + parseFloat(data.valor) * parseInt(data.quantidade, 10),
+            acc[1] + parseInt(data.quantidade, 10),
+          ];
+        } else {
+          return acc;
+        }
+      },
+      [0, 0]
+    );
+
+    return valorEQuantidadeProdutos[0] / valorEQuantidadeProdutos[1];
+  }
+
+  async pesoMedioEstoque() {
+    const dados = await readCSV(filePath);
+
+    const pesoEQuantidadeProdutos = dados.reduce(
+      (acc, data) => {
+        if (data.removido === "false") {
+          return [
+            acc[0] + parseFloat(data.peso) * parseInt(data.quantidade, 10),
+            acc[1] + parseInt(data.quantidade, 10),
+          ];
+        } else {
+          return acc;
+        }
+      },
+      [0, 0]
+    );
+
+    return pesoEQuantidadeProdutos[0] / pesoEQuantidadeProdutos[1];
+  }
+
+  async quantidadeTotalItens() {
+    const dados = await readCSV(filePath);
+
+    return dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + parseInt(data.quantidade, 10);
+      } else {
+        return acc;
+      }
+    }, 0);
+  }
+
+  async quantidadeTotalProdutos() {
+    const dados = await readCSV(filePath);
+
+    return dados.reduce((acc, data) => {
+      if (data.removido === "false") {
+        return acc + 1;
+      } else {
+        return acc;
+      }
+    }, 0);
+  }
 }
